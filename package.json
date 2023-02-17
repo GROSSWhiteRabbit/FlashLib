@@ -1,6 +1,6 @@
 {
-  "name": "flashlib",
-  "version": "2.1.0",
+  "name": "flashlib_onlyplay",
+  "version": "2.1.15",
   "description": "Build items from Animate CC (.fla) library using PIXI.js",
   "author": "rocket",
   "license": "MIT",
@@ -8,8 +8,8 @@
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
-    "minimist": "^1.2.0",
-    "pixi.js": "^5.3.3"
+    "minimist": "^1.2.8",
+    "pixi.js": "^7.1.0"
   },
   "bin": {
     "flashlib": "bin/main.js"
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rocket-ua/FlashLib.git"
+    "url": "git+https://github.com/GROSSWhiteRabbit/FlashLib.git"
   },
   "keywords": [
     "FlashLib",
@@ -38,8 +38,8 @@
     "Adobe"
   ],
   "bugs": {
-    "url": "https://github.com/rocket-ua/FlashLib/issues"
+    "url": "https://github.com/GROSSWhiteRabbit/FlashLib/issues"
   },
-  "homepage": "https://github.com/rocket-ua/FlashLib#readme",
+  "homepage": "https://github.com/GROSSWhiteRabbit/FlashLib#readme",
   "dependencies": {}
 }

@@ -1,4 +1,4 @@
-import {Loader} from 'pixi.js';
+import { extensions } from 'pixi.js';
 
 import {Shape, Bitmap, MovieClip, Graphic,TextField} from './FlashLib'
 import ResourcesLoader from './ResourcesLoader';
@@ -6,7 +6,12 @@ import ResourcesLoader from './ResourcesLoader';
 export default new class Constructor {
 
     constructor() {
-        Loader.registerPlugin(ResourcesLoader);
+        extensions.add(ResourcesLoader);
+
+        this.Shape = Shape;
+        this.Bitmap = Bitmap;
+        this.MovieClip = MovieClip;
+        this.TextField = TextField;
 
         this.defaultCalsses = {
             Shape: Shape,
@@ -29,7 +34,7 @@ export default new class Constructor {
     setDefaultClass($name, $class) {
         this.defaultCalsses[$name] = $class;
     }
-    
+
     /**
      * Добавить класс для создания во время постоения элементов
      * @param {string} $path путь по которому можно взять класс (через точку)

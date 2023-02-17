@@ -1,61 +1,63 @@
-import * as PIXI from 'pixi.js';
+import { Assets } from 'pixi.js'
+import {ExtensionType, utils} from '@pixi/core';
+import { LoaderParserPriority } from '@pixi/assets';
+
 import FlashLib from "./FlashLib";
 
-export default class ResourcesLoader {
-    static pre(resource, next) {
-        return next();
-    }
-
-    static use(resource, next) {
-        if (!resource.data || !(resource.type === PIXI.LoaderResource.TYPE.JSON)) {
-            return next();
-        }
-
-        if (resource.data.metaData && resource.data.metaData.type) {
-            switch (resource.data.metaData.type) {
-                case 'FlashLibAssets':
-                    let options = {
-                        crossOrigin: resource.crossOrigin,
-                        //xhrType: PIXI.LoaderResource.TYPE.JSON,
-                        metadata: null,
-                        parentResource: resource
-                    };
-                    if (resource.data.libs && resource.data.libs.length > 0) {
-                        resource.data.libs.forEach(($lib) => {
-                            if ($lib.path) {
-                                options.name = $lib.name;
-                                options.url = resource.data.baseUrl + $lib.path;
-                                options.metadata = $lib.metadata || {}
-                                this.add(options);
-                            }
-                            if ($lib.data) {
-                                FlashLib.addNewLibrary($lib.data);
-                            }
-                        });
+export default {
+    extension: {
+        name: "FlashlibResourcesLoader",
+        priority: LoaderParserPriority.Normal,
+        type: ExtensionType.LoadParser,
+    },
+    _eMetaDataTypes: {
+        FLASHLIB_ASSETS: 'FlashLibAssets',
+        FLASHLIB: 'FlashLib',
+    },
+    testParse(asset, options, Loader) {
+        return !!asset && !!options && options.format === "json" && asset.metaData && asset.metaData.type && Object.values(this._eMetaDataTypes).includes(asset.metaData.type);
+    },
+    async parse(asset, options, Loader) {
+        const basePath = utils.path.dirname(options.src);
+        switch (asset.metaData.type) {
+            case this._eMetaDataTypes.FLASHLIB_ASSETS:
+                if (asset.libs && asset.libs.length > 0) {
+                    for (const $lib of asset.libs) {
+                        if ($lib.path) {
+                            const url = basePath + '/' + asset.baseUrl + $lib.path;
+                            await _loadAndSetAsset($lib.name, url, Loader)
+                        }
+                        if ($lib.data) {
+                            FlashLib.addNewLibrary($lib.data);
+                        }
                     }
-                    if (resource.data.assets && resource.data.assets.length > 0) {
-                        resource.data.assets.forEach(($item) => {
-                            if ($item.path) {
-                                options.name = $item.name;
-                                options.url = resource.data.baseUrl + $item.path;
-                                options.metadata = $item.metadata || {}
-                                this.add(options);
-                            }
-                            if ($item.data) {
-                                this.add($item.name, $item.data, options);
-                                //PIXI.Texture.addToCache(PIXI.Texture.from($item.data), $item.name);
-                            }
-                        });
+                }
+                if (asset.assets && asset.assets.length > 0) {
+                    for (const $item of asset.assets) {
+                        if ($item.path) {
+                            const url = basePath + '/' + asset.baseUrl + $item.path;
+                            await _loadAndSetAsset($item.name, url, Loader)
+                        }
+                        if ($item.data) {
+                            assets[$item.name] = $item.data
+                        }
                     }
-                    return next();
-                case 'FlashLib':
-                    FlashLib.addNewLibrary(resource.data);
-                    return next();
-                default:
-                    return next();
-            }
+                }
+                break;
+            case this._eMetaDataTypes.FLASHLIB:
+                FlashLib.addNewLibrary(asset);
+                break;
+            default:
+                throw new Error('Invalid resource type for Flashlib ResourcesLoader parser');
+                break;
         }
-
-        return next();
+        return asset;
     }
+}
+
+
+const _loadAndSetAsset = async (key, url, Loader) => {
+    const asset = await Loader.load(url);
+    if (asset?.constructor?.name === '_Spritesheet') return;
+    Assets.cache.set(key, asset);
 }
