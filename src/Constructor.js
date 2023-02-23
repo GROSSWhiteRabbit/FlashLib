@@ -1,6 +1,10 @@
 import { extensions } from 'pixi.js';
+import Shape from './Shape';
+import Bitmap from './Bitmap';
+import MovieClip from './MovieClip';
+import Graphic from './Graphic';
+import TextField from './TextField';
 
-import {Shape, Bitmap, MovieClip, Graphic,TextField} from './FlashLib'
 import ResourcesLoader from './ResourcesLoader';
 
 export default new class Constructor {
@@ -8,22 +12,62 @@ export default new class Constructor {
     constructor() {
         extensions.add(ResourcesLoader);
 
+        this.defaultCalsses = {
+        }
+
         this.Shape = Shape;
         this.Bitmap = Bitmap;
         this.MovieClip = MovieClip;
         this.TextField = TextField;
 
-        this.defaultCalsses = {
-            Shape: Shape,
-            Bitmap: Bitmap,
-            MovieClip: MovieClip,
-            Graphic: Graphic,
-            TextField: TextField
-        }
-
         this.documents = {};
 
         this.registeredClassesObject = {};
+    }
+
+    set TextField(value) {
+        this._TextField = value;
+        this.defaultCalsses.TextField = this._TextField;
+    }
+
+    get TextField() {
+        return this._TextField;
+    }
+
+    set Shape(value) {
+        this._Shape = value;
+        this.defaultCalsses.Shape = this._Shape;
+    }
+
+    get Shape() {
+        return this._Shape;
+    }
+
+    set Bitmap(value) {
+        this._Bitmap = value;
+        this.defaultCalsses.Bitmap = this._Bitmap;
+    }
+
+    get Bitmap() {
+        return this._Bitmap;
+    }
+
+    set MovieClip(value) {
+        this._MovieClip = value;
+        this.defaultCalsses.MovieClip = this._MovieClip;
+    }
+
+    get MovieClip() {
+        return this._MovieClip;
+    }
+
+    set Graphic(value) {
+        this._Graphic = value;
+        this.defaultCalsses.Graphic = this._Graphic;
+    }
+
+    get Graphic() {
+        return this._Graphic;
     }
 
     /**
