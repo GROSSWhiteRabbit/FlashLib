@@ -1,6 +1,6 @@
 {
   "name": "flashlib_onlyplay",
-  "version": "2.1.19",
+  "version": "2.1.20",
   "description": "Build items from Animate CC (.fla) library using PIXI.js",
   "author": "rocket",
   "license": "MIT",

@@ -19,13 +19,14 @@ export default {
     },
     async parse(asset, options, Loader) {
         const basePath = utils.path.dirname(options.src);
+        const promises = [];
         switch (asset.metaData.type) {
             case this._eMetaDataTypes.FLASHLIB_ASSETS:
                 if (asset.libs && asset.libs.length > 0) {
                     for (const $lib of asset.libs) {
                         if ($lib.path) {
                             const url = basePath + '/' + asset.baseUrl + $lib.path;
-                            await _loadAndSetAsset($lib.name, url, Loader)
+                            promises.push(_loadAndSetAsset($lib.name, url, Loader));
                         }
                         if ($lib.data) {
                             FlashLib.addNewLibrary($lib.data);
@@ -36,7 +37,7 @@ export default {
                     for (const $item of asset.assets) {
                         if ($item.path) {
                             const url = basePath + '/' + asset.baseUrl + $item.path;
-                            await _loadAndSetAsset($item.name, url, Loader)
+                            promises.push(_loadAndSetAsset($item.name, url, Loader));
                         }
                         if ($item.data) {
                             assets[$item.name] = $item.data
@@ -51,6 +52,8 @@ export default {
                 throw new Error('Invalid resource type for Flashlib ResourcesLoader parser');
                 break;
         }
+
+        await Promise.all(promises);
         return asset;
     }
 }
