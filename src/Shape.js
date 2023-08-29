@@ -1,4 +1,4 @@
-import {Graphics, utils, Matrix} from 'pixi.js'
+import {Graphics, utils, Matrix, Color} from 'pixi.js'
 import DisplayProperties from "./DisplayProperties";
 
 export default class Shape extends Graphics {
@@ -11,7 +11,7 @@ export default class Shape extends Graphics {
 
         DisplayProperties.setDisplayItemProperties(this, this.displayData);
     }
-    
+
     createGraphic() {
         this.displayData.contours.forEach((contourData) => {
             if (contourData.interior) {
@@ -37,10 +37,10 @@ export default class Shape extends Graphics {
                         let color = 0x000000;
                         let chunks = contourData.fill.color.replace('#', '').match(/.{1,2}/g);
                         if (chunks.length === 4) {
-                            alpha = utils.string2hex(chunks.pop()) / 255;
-                            color = utils.string2hex(chunks.join(''));
+                            alpha = Color.shared.setValue(string).toNumber(chunks.pop()) / 255;
+                            color = Color.shared.setValue(chunks.join('')).toNumber();
                         } else {
-                            color = utils.string2hex(contourData.fill.color);
+                            color = Color.shared.setValue(contourData.fill.color).toNumber();
                         }
                         this.beginFill(color, alpha);
                         break;
