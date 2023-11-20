@@ -1,4 +1,4 @@
-import { extensions } from 'pixi.js';
+import { extensions, utils } from 'pixi.js';
 import Shape from './Shape';
 import Bitmap from './Bitmap';
 import MovieClip from './MovieClip';
@@ -209,6 +209,7 @@ export default new class Constructor {
                 item = new this.defaultCalsses.Graphic($libraryItemData, $displayItemData);
                 break;
             case 'bitmap':
+                if (!utils.TextureCache[name]) break;
                 item = new this.defaultCalsses.Bitmap($libraryItemData, $displayItemData);
                 break;
             default:
