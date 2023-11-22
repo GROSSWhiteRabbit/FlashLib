@@ -209,6 +209,7 @@ export default new class Constructor {
                 item = new this.defaultCalsses.Graphic($libraryItemData, $displayItemData);
                 break;
             case 'bitmap':
+                let name = $libraryItemData.name.replace(/(\.png|\.jpg)/, '');
                 if (name && !utils.TextureCache[name]) break;
                 item = new this.defaultCalsses.Bitmap($libraryItemData, $displayItemData);
                 break;

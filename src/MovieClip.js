@@ -297,10 +297,11 @@ export default class MovieClip extends Container {
         let newAdded = [];
         $currentFrameData.elements.forEach((elementData, index) => {
             let displayItem = FlashLib.createDisplayItemFromData(elementData, this.libName);
+            if (!displayItem) return;
             if (this.blendMode !== undefined) {
                 displayItem.blendMode = this.blendMode;
             }
-            this.addChildAt(displayItem, $startAddPosition - $currentFrameData.elements.length + index);
+            this.addChildAt(displayItem, Math.min($startAddPosition - $currentFrameData.elements.length + index, this.children.length));
             newAdded.push(displayItem);
 
             if (displayItem.name && displayItem.name !== '') {
