@@ -33,15 +33,9 @@ export default class Shape extends Graphics {
                         this.beginTextureFill(params);
                         break;
                     case 'solid':
-                        let alpha = 1;
-                        let color = 0x000000;
-                        let chunks = contourData.fill.color.replace('#', '').match(/.{1,2}/g);
-                        if (chunks.length === 4) {
-                            alpha = Color.shared.setValue(string).toNumber(chunks.pop()) / 255;
-                            color = Color.shared.setValue(chunks.join('')).toNumber();
-                        } else {
-                            color = Color.shared.setValue(contourData.fill.color).toNumber();
-                        }
+                        const color = Color.shared.setValue(contourData.fill.color);
+                        const alpha = color.alpha;
+                        color.setAlpha(1);
                         this.beginFill(color, alpha);
                         break;
                     case 'linearGradient':
