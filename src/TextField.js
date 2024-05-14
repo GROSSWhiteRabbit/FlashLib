@@ -12,10 +12,12 @@ export default class TextField extends PIXI.Text {
             fill: textAttrs.fillColor,
             fontFamily: textAttrs.face.replace('*', '')/*.split(' ')*/,
             fontSize: textAttrs.size,
+            lineHeight: textAttrs.size,
             fontStyle: textAttrs.italic ? 'italic' : 'normal',
             fontWeight: textAttrs.bold ? 'bold' : 'normal',
-            letterSpacing: textAttrs.letterSpacing,
+            letterSpacing: textAttrs.letterSpacing || 0.1,
             leading: textAttrs.lineSpacing,
+            alignY: 'top',
             // stroke: '#000000',
             // strokeThickness: 3
 
@@ -67,25 +69,16 @@ export default class TextField extends PIXI.Text {
         this.textRect = new PIXI.Rectangle(0, 0, 0, 0);
     };
 
-    fitSize(width, height) {
-        width = width === undefined ? !this.style.wordWrap : width;
-        height = height === undefined ? !this.style.wordWrap : height;
+    fitSize(fitByWidth, fitByHeight) {
+        fitByWidth = fitByWidth === undefined ? !this.style.wordWrap : fitByWidth;
+        fitByHeight = fitByHeight === undefined ? !this.style.wordWrap : fitByHeight;
 
         this.style.fontSize = this.displayData.textRuns[0].textAttrs.size;
         this['updateText'](true);
 
-        let doFitWidth = width;
-        let doFitHeight = height;
-
-        while (doFitWidth || doFitHeight) {
+        while ((fitByWidth && this.origWidth > this.width) || (fitByHeight && this.origHeight > this.height)) {
             this.style.fontSize--;
             this.updateText(true);
-            if (doFitWidth) {
-                doFitWidth = this.origWidth > this.width;
-            }
-            if (doFitHeight) {
-                doFitHeight = this.origHeight > this.height;
-            }
         }
         this.correctPosition();
     }
@@ -96,45 +89,45 @@ export default class TextField extends PIXI.Text {
         }
 
         let hAlign = $horizontal || this.style && this.style.align;
-        let vAlign = $vertical || 'top';
+        let vAlign = $vertical || this.style && this.style.alignY;
 
         //if (this.style && this.style.align) {
         if (hAlign) {
             switch (hAlign) {
                 case 'left':
-                    this.transform.position.x = this.textRect.x;
+                    this.transform.position.x = this.textRect.x - this.style.strokeThickness / 2;
                     break;
                 case 'center':
                     this.transform.position.x = this.textRect.x + ((this.textRect.width - this.origWidth) / 2);
                     break;
                 case 'right':
-                    this.transform.position.x = this.textRect.x + (this.textRect.width - this.origWidth);
+                    this.transform.position.x = this.textRect.x + (this.textRect.width - this.origWidth) + this.style.strokeThickness / 2;
                     break;
                 default:
-                    this.transform.position.x = this.textRect.x;
+                    this.transform.position.x = this.textRect.x - this.style.strokeThickness / 2;
                     break;
             }
         } else {
-            this.transform.position.x = this.textRect.x;
+            this.transform.position.x = this.textRect.x - this.style.strokeThickness / 2;
         }
 
         if (vAlign) {
             switch (vAlign) {
                 case 'top':
-                    this.transform.position.y = this.textRect.y;
+                    this.transform.position.y = this.textRect.y - this.style.strokeThickness / 2;
                     break;
                 case 'center':
-                    this.transform.position.y = this.textRect.y + ((this.textRect.height - this.origHeight) / 2);
+                    this.transform.position.y = this.textRect.y + ((this.textRect.height - this.origHeight) / 2) + this.style.strokeThickness / 2;
                     break;
                 case 'bottom':
-                    this.transform.position.y = this.textRect.y + (this.textRect.height - this.origHeight);
+                    this.transform.position.y = this.textRect.y + (this.textRect.height - this.origHeight) + this.style.strokeThickness + this.style.strokeThickness / 2;
                     break;
                 default:
-                    this.transform.position.y = this.textRect.y;
+                    this.transform.position.y = this.textRect.y - this.style.strokeThickness / 2;
                     break;
             }
         } else {
-            this.transform.position.y = this.textRect.y;
+            this.transform.position.y = this.textRect.y - this.style.strokeThickness / 2;
         }
 
         //this.transform.position.y += this.displayData.textRuns[0].textAttrs.descent / 2;
@@ -265,7 +258,7 @@ export default class TextField extends PIXI.Text {
     }
 
     set x(value) {
-        this.textRect.x = value - this.style.strokeThickness * 2;
+        this.textRect.x = value;
         this.correctPosition();
     }
 
@@ -274,7 +267,7 @@ export default class TextField extends PIXI.Text {
     }
 
     set y(value) {
-        this.textRect.y = value - this.style.strokeThickness * 2;
+        this.textRect.y = value;
         //console.log(this.displayData.textRuns[0].textAttrs.descent)
         //this.textRect.y += this.displayData.textRuns[0].textAttrs.descent
         this.correctPosition();
