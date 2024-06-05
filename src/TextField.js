@@ -76,7 +76,7 @@ export default class TextField extends PIXI.Text {
         this.style.fontSize = this.displayData.textRuns[0].textAttrs.size;
         this['updateText'](true);
 
-        while ((fitByWidth && this.origWidth > this.width) || (fitByHeight && this.origHeight > this.height)) {
+        while (this.style.fontSize > 0 && ((fitByWidth && this.origWidth > this.width) || (fitByHeight && this.origHeight > this.height))) {
             this.style.fontSize--;
             this.updateText(true);
         }
