@@ -15,7 +15,7 @@ export default {
         FLASHLIB: 'FlashLib',
     },
     testParse(asset, options, Loader) {
-        return !!asset && !!options && options.format === "json" && asset.metaData && asset.metaData.type && Object.values(this._eMetaDataTypes).includes(asset.metaData.type);
+        return !!asset && !!options && /^json/.test(options.format) && asset.metaData && asset.metaData.type && Object.values(this._eMetaDataTypes).includes(asset.metaData.type);
     },
     async parse(asset, options, Loader) {
         const basePath = utils.path.dirname(options.src);
