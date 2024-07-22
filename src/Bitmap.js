@@ -10,8 +10,25 @@ export default class Bitmap extends Sprite {
 
         this.libData = $data;
         this.displayData = $displayItemData;
-        
+
         DisplayProperties.setDisplayItemProperties(this, this.displayData);
+
+        this.onCreateInstance();
+    }
+
+    //Function placeholder to be overridden externally.
+    onCreateInstance() {
+
+    }
+
+    //Function placeholder to be overridden externally.
+    onDestroyInstance() {
+
+    }
+
+    destroy(_options) {
+        this.onDestroyInstance();
+        super.destroy(_options);
     }
 
     render(renderer) {
