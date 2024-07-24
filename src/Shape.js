@@ -35,8 +35,8 @@ export default class Shape extends Graphics {
                     case 'solid':
                         const color = Color.shared.setValue(contourData.fill.color);
                         const alpha = color.alpha;
-                        color.setAlpha(1);
-                        this.beginFill(color, alpha);
+                        color.setAlpha(alpha);
+                        this.beginFill(color);
                         break;
                     case 'linearGradient':
 
