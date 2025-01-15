@@ -73,11 +73,11 @@ export default class TextField extends PIXI.Text {
         fitByWidth = fitByWidth === undefined ? !this.style.wordWrap : fitByWidth;
         fitByHeight = fitByHeight === undefined ? !this.style.wordWrap : fitByHeight;
 
-        this.style.fontSize = this.displayData.textRuns[0].textAttrs.size;
-        this['updateText'](true);
+        this.style.lineHeight = this.style.fontSize = this.displayData.textRuns[0].textAttrs.size;
+        this.updateText(true);
 
         while (this.style.fontSize > 0 && ((fitByWidth && this.origWidth > this.width) || (fitByHeight && this.origHeight > this.height))) {
-            this.style.fontSize--;
+            this.style.fontSize = this.style.lineHeight = this.style.fontSize - 1;
             this.updateText(true);
         }
         this.correctPosition();
@@ -274,24 +274,24 @@ export default class TextField extends PIXI.Text {
     }
 
     get origWidth() {
-        this['updateText'](true);
+        this.updateText(true);
         return Math.abs(this.scale.x) * this.texture.orig.width;
     }
 
     set origWidth(value) {
-        this['updateText'](true);
+        this.updateText(true);
         let sign = PIXI.utils.sign(this.scale.x) || 1;
         this.scale.x = sign * value / this.texture.orig.width;
         this._width = value;
     }
 
     get origHeight() {
-        this['updateText'](true);
+        this.updateText(true);
         return Math.abs(this.scale.y) * this._texture.orig.height;
     }
 
     set origHeight(value) {
-        this['updateText'](true);
+        this.updateText(true);
         let sign = PIXI.utils.sign(this.scale.y) || 1;
         this.scale.y = sign * value / this.texture.orig.height;
         this._height = value;
